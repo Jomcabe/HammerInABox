@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUBBER | Hackathon Project</title>
+    <title>GUBBER | HammerInABox</title>
     <style>
         /* Base Reset & Fonts */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            scroll-behavior: smooth;
         }
         body {
             font-family: 'Arial Black', Impact, sans-serif;
@@ -20,16 +21,18 @@
 
         /* Top Navigation Bar */
         nav {
-            background-color: #d11212; /* Spicy Red */
+            background-color: #d11212; 
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 4px solid #000;
+            flex-wrap: wrap; /* Helps with smaller screens */
         }
         .nav-links {
             display: flex;
             gap: 20px;
+            flex-wrap: wrap;
         }
         .nav-links a {
             color: #fff;
@@ -37,6 +40,7 @@
             font-size: 1.1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            transition: color 0.2s;
         }
         .nav-links a:hover {
             color: #fde047;
@@ -47,48 +51,47 @@
             text-shadow: 2px 2px 0 #000;
         }
 
-        /* Main Hero Section with Angled Yellow Banner */
+        /* Main Hero Section */
         .hero-container {
             position: relative;
             width: 100%;
-            height: 80vh;
+            min-height: 80vh;
             background-color: #d11212;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 40px 20px;
         }
 
-        /* The dynamic angled background */
         .angled-bg {
             position: absolute;
             top: 10%;
             left: -10%;
             width: 120%;
             height: 100%;
-            background-color: #ffe600; /* Electric Yellow */
+            background-color: #ffe600; 
             transform: rotate(-3deg);
             border-top: 8px solid #000;
             border-bottom: 8px solid #000;
             z-index: 1;
         }
 
-        /* Starburst sticker effect */
         .burst-sticker {
             position: absolute;
-            top: 15%;
-            left: 20%;
+            top: 10%;
+            right: 15%; /* Moved to right to balance layout on mobile */
             background-color: #ff5e00;
             color: #fff;
             padding: 20px;
-            font-size: 2rem;
-            transform: rotate(-15deg);
+            font-size: 1.5rem;
+            transform: rotate(15deg);
             border: 4px solid #000;
-            box-shadow: 6px 6px 0 #000;
+            box-shadow: 4px 4px 0 #000;
             z-index: 3;
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -103,26 +106,26 @@
             text-align: center;
             color: #000;
             max-width: 900px;
-            padding: 20px;
         }
         
+        /* Responsive Typography using Clamp */
         .hero-title {
-            font-size: 7rem;
+            font-size: clamp(3.5rem, 8vw, 7rem); /* Scales dynamically */
             text-transform: uppercase;
             color: #fff;
             text-shadow: 
-                -4px -4px 0 #000,  
-                 4px -4px 0 #000,
-                -4px  4px 0 #000,
-                 4px  4px 0 #000,
-                 8px  8px 0 #000; /* Thick drop shadow */
+                -3px -3px 0 #000,  
+                 3px -3px 0 #000,
+                -3px  3px 0 #000,
+                 3px  3px 0 #000,
+                 6px  6px 0 #000; 
             letter-spacing: 2px;
-            margin-bottom: -10px;
+            margin-bottom: -5px;
             transform: scaleY(1.1) rotate(-2deg);
         }
 
         .hero-subtitle {
-            font-size: 2.5rem;
+            font-size: clamp(1.2rem, 3vw, 2.5rem);
             color: #ff5e00;
             background-color: #000;
             display: inline-block;
@@ -131,12 +134,11 @@
             margin-bottom: 30px;
         }
 
-        /* Bold Call to Action Button */
         .cta-button {
             display: inline-block;
             background-color: #d11212;
             color: #fff;
-            font-size: 1.8rem;
+            font-size: clamp(1.2rem, 2vw, 1.8rem);
             padding: 15px 40px;
             text-decoration: none;
             border: 4px solid #000;
@@ -145,20 +147,91 @@
             cursor: pointer;
             text-transform: uppercase;
         }
+        .cta-button:hover {
+            background-color: #ff5e00;
+        }
         .cta-button:active {
             transform: translate(4px, 4px);
             box-shadow: 2px 2px 0 #000;
         }
 
-        /* Placeholder for a mascot or tech element */
-        .tech-graphic {
-            position: absolute;
-            bottom: -20px;
-            left: 5%;
-            font-size: 10rem;
-            z-index: 4;
-            filter: drop-shadow(5px 5px 0px #000);
-            transform: rotate(10deg);
+        /* About Us Section */
+        .about-section {
+            background-color: #1a1a1a;
+            padding: 80px 20px;
+            text-align: center;
+            border-top: 8px solid #000;
+        }
+
+        .about-title {
+            font-size: 4rem;
+            color: #ffe600;
+            text-transform: uppercase;
+            text-shadow: 4px 4px 0 #000;
+            margin-bottom: 50px;
+            display: inline-block;
+            border-bottom: 4px solid #d11212;
+            padding-bottom: 10px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .team-card {
+            background-color: #fff;
+            border: 4px solid #000;
+            box-shadow: 8px 8px 0 #d11212;
+            padding: 20px;
+            color: #000;
+            transition: transform 0.2s;
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .team-photo {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background-color: #ccc;
+            border: 4px solid #000;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .team-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #d11212;
+            text-transform: uppercase;
+        }
+
+        .team-card p {
+            font-family: Arial, sans-serif;
+            font-size: 1rem;
+            line-height: 1.5;
+            font-weight: bold;
+        }
+
+        /* Responsive Fixes for smaller screens */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .nav-links {
+                justify-content: center;
+            }
+            .angled-bg {
+                transform: rotate(-5deg);
+                height: 120%;
+            }
         }
     </style>
 </head>
@@ -167,23 +240,52 @@
     <nav>
         <div class="logo">GUBBER.US</div>
         <div class="nav-links">
-            <a href="#">Features</a>
-            <a href="#">Documentation</a>
-            <a href="#">GitHub Repo</a>
+            <a href="#about">About Us</a>
+            <a href="https://github.com/Jomcabe/HammerInABox" target="_blank">GitHub Repo</a>
         </div>
     </nav>
 
     <header class="hero-container">
         <div class="angled-bg"></div>
-        <div class="burst-sticker">ZERO<br>DAY!</div>
-        
-        <div class="tech-graphic">💻</div> <div class="hero-content">
-            <h1 class="hero-title">GUBBER</h1>
-            <h2 class="hero-subtitle">NEXT-GEN ETHICAL HACKING TOOLKIT</h2>
+        <div class="burst-sticker">POOB<br>DAY!</div>
+
+        <div class="hero-content">
+            <h1 class="hero-title">HAMMER IN A BOX</h1>
+            <h2 class="hero-subtitle">NEXT-GEN CANNON LAUNCHING INNOVATION</h2>
             <br>
-            <a href="#" class="cta-button">PULL REPO NOW</a>
+            <a href="https://github.com/Jomcabe/HammerInABox" target="_blank" class="cta-button">PULL REPO NOW</a>
         </div>
     </header>
+
+    <section id="about" class="about-section">
+        <h2 class="about-title">THE CREATORS</h2>
+        
+        <div class="team-grid">
+            <div class="team-card">
+                <img src="Naim_photo.jpg" alt="Naim" class="team-photo">
+                <h3>Naim</h3>
+                <p>Hardware engineer responsible for setting up designs of servos while implementing code to control them. Lead Feastables sourcer</p>
+            </div>
+            
+            <div class="team-card">
+                <img src="Maeve_photo.jpg" alt="Maeve" class="team-photo">
+                <h3>Maeve</h3>
+                <p>Systems specialist focusing on payload delivery mechanisms and implementations.</p>
+            </div>
+            
+            <div class="team-card">
+                <img src="Bill_photo.jpg" alt="Bill" class="team-photo">
+                <h3>Bill</h3>
+                <p>Materials specialist, focusing on determining best materials for project and sourcing. Co-Engineered servo configuration & code</p>
+            </div>
+            
+            <div class="team-card">
+                <img src="Jose_photo.jpg" alt="Jose Carvajal-Beltran" class="team-photo">
+                <h3>Jose Carvajal-Beltran</h3>
+                <p>Format specialist ensuring all documentation is clear and well-structured. Ensured any code involving cameras and API was properly coded and integrated. Created this website</p>
+            </div>
+        </div>
+    </section>
 
 </body>
 </html>
