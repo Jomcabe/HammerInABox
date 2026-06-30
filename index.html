@@ -1,642 +1,151 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HAMMER IN A BOX // Target Acquired</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Orbitron:wght@600;800;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0a0a0f;
-            --bg-2: #11121a;
-            --panel: #15161f;
-            --red: #ff2d2d;
-            --red-deep: #b00020;
-            --amber: #ffb020;
-            --cyan: #00e5ff;
-            --text: #e7e9ee;
-            --muted: #8a8f9c;
-            --grid: rgba(255,45,45,0.08);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
-            line-height: 1.55;
-        }
-        ::selection { background: var(--red); color: #fff; }
-
-        /* Animated scanlines + grid backdrop */
-        body::before {
-            content: "";
-            position: fixed; inset: 0;
-            background:
-                linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 40px 40px,
-                linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 40px 40px,
-                radial-gradient(ellipse at top, rgba(255,45,45,0.15), transparent 60%);
-            pointer-events: none;
-            z-index: 0;
-            mask-image: radial-gradient(ellipse at center, #000 30%, transparent 90%);
-        }
-        body::after {
-            content: "";
-            position: fixed; inset: 0;
-            background: repeating-linear-gradient(
-                to bottom,
-                rgba(255,255,255,0.02) 0 1px,
-                transparent 1px 3px
-            );
-            pointer-events: none;
-            z-index: 1;
-            mix-blend-mode: overlay;
-        }
-
-        /* Nav */
-        nav {
-            position: sticky; top: 0; z-index: 50;
-            backdrop-filter: blur(10px);
-            background: rgba(10,10,15,0.7);
-            border-bottom: 1px solid rgba(255,45,45,0.3);
-            padding: 14px 28px;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .logo {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            letter-spacing: 3px;
-            font-size: 1.15rem;
-            color: #fff;
-            display: flex; align-items: center; gap: 10px;
-        }
-        .logo .dot {
-            width: 10px; height: 10px; border-radius: 50%;
-            background: var(--red);
-            box-shadow: 0 0 12px var(--red), 0 0 24px var(--red);
-            animation: pulse 1.4s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.85); }
-        }
-        .nav-links { display: flex; gap: 22px; flex-wrap: wrap; }
-        .nav-links a {
-            color: var(--muted);
-            text-decoration: none;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            transition: color 0.2s;
-        }
-        .nav-links a:hover { color: var(--red); }
-
-        /* Hero */
-        .hero {
-            position: relative;
-            min-height: 92vh;
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 40px;
-            align-items: center;
-            padding: 60px 60px;
-            z-index: 2;
-        }
-        .hero-left { position: relative; z-index: 3; }
-        .tag {
-            display: inline-flex; align-items: center; gap: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--red);
-            border: 1px solid rgba(255,45,45,0.4);
-            padding: 6px 12px;
-            border-radius: 999px;
-            background: rgba(255,45,45,0.06);
-            margin-bottom: 24px;
-            letter-spacing: 2px;
-        }
-        .tag .blink { color: var(--amber); animation: blink 1s infinite steps(2); }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        h1.title {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: clamp(2.8rem, 7vw, 6rem);
-            line-height: 0.95;
-            letter-spacing: -1px;
-            text-transform: uppercase;
-            background: linear-gradient(180deg, #fff 0%, #ff7a7a 60%, var(--red) 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 60px rgba(255,45,45,0.25);
-            margin-bottom: 18px;
-        }
-        h1.title .slash { color: var(--red); -webkit-text-fill-color: var(--red); }
-
-        .lede {
-            font-size: clamp(1rem, 1.4vw, 1.2rem);
-            color: var(--muted);
-            max-width: 540px;
-            margin-bottom: 32px;
-        }
-        .lede strong { color: var(--text); }
-
-        .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
-        .btn {
-            font-family: 'JetBrains Mono', monospace;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            padding: 14px 26px;
-            text-decoration: none;
-            border: 1px solid var(--red);
-            color: #fff;
-            background: linear-gradient(135deg, var(--red-deep), var(--red));
-            transition: transform 0.15s, box-shadow 0.15s;
-            box-shadow: 0 0 0 rgba(255,45,45,0);
-            display: inline-flex; align-items: center; gap: 10px;
-        }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(255,45,45,0.35); }
-        .btn.ghost { background: transparent; color: var(--text); border-color: rgba(255,255,255,0.2); }
-        .btn.ghost:hover { border-color: var(--red); color: var(--red); }
-
-        /* HUD panel on right */
-        .hud {
-            position: relative;
-            background:
-                radial-gradient(circle at 30% 20%, rgba(255,45,45,0.15), transparent 50%),
-                linear-gradient(180deg, var(--panel), #0c0d14);
-            border: 1px solid rgba(255,45,45,0.3);
-            padding: 28px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: #d6d8df;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 0 80px rgba(255,45,45,0.05);
-            z-index: 3;
-        }
-        .hud::before, .hud::after {
-            content: ""; position: absolute; width: 20px; height: 20px;
-            border: 2px solid var(--red);
-        }
-        .hud::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
-        .hud::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
-
-        .hud-header {
-            display: flex; justify-content: space-between;
-            color: var(--red);
-            border-bottom: 1px dashed rgba(255,45,45,0.3);
-            padding-bottom: 10px; margin-bottom: 16px;
-            letter-spacing: 2px;
-        }
-        .hud-row { display: flex; justify-content: space-between; padding: 6px 0; }
-        .hud-row .k { color: var(--muted); }
-        .hud-row .v { color: var(--amber); }
-        .reticle {
-            margin: 18px auto;
-            width: 180px; height: 180px;
-            border-radius: 50%;
-            border: 1px dashed rgba(255,45,45,0.5);
-            position: relative;
-            display: flex; align-items: center; justify-content: center;
-            background: radial-gradient(circle, rgba(255,45,45,0.08), transparent 70%);
-        }
-        .reticle::before, .reticle::after {
-            content: ""; position: absolute;
-            background: var(--red);
-        }
-        .reticle::before { width: 100%; height: 1px; }
-        .reticle::after { height: 100%; width: 1px; }
-        .reticle span {
-            font-size: 0.7rem; color: var(--red);
-            background: var(--bg); padding: 2px 8px; z-index: 2;
-            letter-spacing: 2px;
-        }
-        .scan-bar {
-            position: relative;
-            height: 6px;
-            background: rgba(255,45,45,0.15);
-            border: 1px solid rgba(255,45,45,0.3);
-            overflow: hidden;
-            margin-top: 10px;
-        }
-        .scan-bar::after {
-            content: "";
-            position: absolute; top: 0; left: -30%;
-            width: 30%; height: 100%;
-            background: linear-gradient(90deg, transparent, var(--red), transparent);
-            animation: scan 2s linear infinite;
-        }
-        @keyframes scan { to { left: 130%; } }
-
-        /* Sections */
-        section { position: relative; z-index: 2; padding: 100px 60px; }
-        .section-eyebrow {
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--red);
-            font-size: 0.85rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            display: flex; align-items: center; gap: 12px;
-        }
-        .section-eyebrow::before {
-            content: ""; width: 30px; height: 1px; background: var(--red);
-        }
-        h2.section-title {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 800;
-            font-size: clamp(2rem, 4vw, 3.4rem);
-            letter-spacing: -0.5px;
-            text-transform: uppercase;
-            margin-bottom: 40px;
-            color: #fff;
-        }
-        h2.section-title em { color: var(--red); font-style: normal; }
-
-        /* How it works pipeline */
-        .pipeline {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 18px;
-            margin-top: 30px;
-        }
-        .step {
-            position: relative;
-            background: linear-gradient(180deg, var(--panel), #0d0e15);
-            border: 1px solid rgba(255,255,255,0.08);
-            padding: 24px;
-            transition: border-color 0.2s, transform 0.2s;
-        }
-        .step:hover { border-color: var(--red); transform: translateY(-4px); }
-        .step .num {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 2.4rem;
-            color: var(--red);
-            opacity: 0.5;
-            line-height: 1;
-        }
-        .step h3 {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin: 10px 0 8px;
-            color: #fff;
-        }
-        .step p { color: var(--muted); font-size: 0.93rem; }
-
-        /* Brian Griffin / mascot */
-        .mascot-section {
-            background: linear-gradient(180deg, transparent, rgba(255,45,45,0.06), transparent);
-            border-top: 1px solid rgba(255,45,45,0.15);
-            border-bottom: 1px solid rgba(255,45,45,0.15);
-        }
-        .mascot {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 50px;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .mascot-card {
-            position: relative;
-            aspect-ratio: 1/1;
-            background: linear-gradient(135deg, #1a1b25, #0a0a10);
-            border: 1px solid rgba(255,45,45,0.4);
-            overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
-        }
-        .mascot-card img {
-            width: 100%; height: 100%;
-            object-fit: contain;
-            background: #fff;
-            filter: contrast(1.05);
-        }
-        .mascot-card .fallback {
-            font-size: 10rem;
-            text-align: center;
-        }
-        .mascot-card .label {
-            position: absolute;
-            bottom: 16px; left: 16px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--red);
-            background: rgba(10,10,15,0.85);
-            padding: 6px 12px;
-            border: 1px solid var(--red);
-            letter-spacing: 2px;
-        }
-        .mascot-card .corner-tag {
-            position: absolute;
-            top: 16px; right: 16px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--amber);
-            letter-spacing: 2px;
-        }
-        .mascot-text h2 { margin-bottom: 20px; }
-        .mascot-text p { color: var(--muted); margin-bottom: 16px; font-size: 1.05rem; }
-        .audio-btn {
-            margin-top: 10px;
-            background: transparent;
-            border: 1px solid var(--amber);
-            color: var(--amber);
-            padding: 12px 22px;
-            font-family: 'JetBrains Mono', monospace;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .audio-btn:hover { background: var(--amber); color: #000; }
-
-        /* Stack */
-        .stack {
-            display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px;
-        }
-        .chip {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--text);
-            padding: 8px 14px;
-            border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(255,255,255,0.03);
-            letter-spacing: 1px;
-        }
-        .chip.red { border-color: var(--red); color: var(--red); }
-
-        /* Team */
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 24px;
-        }
-        .team-card {
-            position: relative;
-            background: var(--panel);
-            border: 1px solid rgba(255,255,255,0.08);
-            overflow: hidden;
-            transition: transform 0.25s, border-color 0.25s;
-        }
-        .team-card:hover { transform: translateY(-6px); border-color: var(--red); }
-        .team-photo-wrap {
-            position: relative;
-            aspect-ratio: 1/1;
-            overflow: hidden;
-            background: #000;
-        }
-        .team-photo {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            filter: grayscale(0.15) contrast(1.05);
-            transition: transform 0.4s, filter 0.4s;
-        }
-        .team-card:hover .team-photo {
-            transform: scale(1.05);
-            filter: grayscale(0) contrast(1.1);
-        }
-        .team-photo-wrap::after {
-            content: "";
-            position: absolute; inset: 0;
-            background: linear-gradient(180deg, transparent 50%, rgba(10,10,15,0.95));
-        }
-        .team-photo-wrap .id {
-            position: absolute;
-            top: 12px; left: 12px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--red);
-            background: rgba(10,10,15,0.8);
-            padding: 4px 8px;
-            border: 1px solid var(--red);
-            letter-spacing: 2px;
-            z-index: 2;
-        }
-        .team-body { padding: 20px 22px 24px; }
-        .team-body h3 {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 800;
-            font-size: 1.3rem;
-            text-transform: uppercase;
-            color: #fff;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-        .team-body h3::before {
-            content: "// ";
-            color: var(--red);
-        }
-        .team-body p {
-            color: var(--muted);
-            font-size: 0.95rem;
-            line-height: 1.55;
-        }
-
-        /* Footer */
-        footer {
-            padding: 50px 60px 40px;
-            border-top: 1px solid rgba(255,45,45,0.2);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--muted);
-            text-align: center;
-            position: relative; z-index: 2;
-            letter-spacing: 1.5px;
-        }
-        footer .heart { color: var(--red); }
-
-        /* Responsive */
-        @media (max-width: 900px) {
-            .hero { grid-template-columns: 1fr; padding: 50px 24px; }
-            section { padding: 70px 24px; }
-            footer { padding: 40px 24px; }
-            .mascot { grid-template-columns: 1fr; }
-            nav { padding: 12px 20px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>~*~ HaMMeR iN a BoX !!! WeLCoMe ~*~ (best viewed in 800x600)</title>
+<style>
+  body {
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    background-color: #00aa00;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><text x='2' y='30' font-size='30'>💀</text></svg>");
+    color: #ffff00;
+    text-align: center;
+    margin: 0;
+    cursor: crosshair;
+  }
+  a { color: #0000ee; }
+  a:visited { color: purple; }
+  marquee { font-weight: bold; }
+  .box {
+    border: 6px ridge #ff0000;
+    background-color: #000080;
+    margin: 10px;
+    padding: 8px;
+  }
+  table { margin: 0 auto; border: 4px outset gray; background: #c0c0c0; }
+  td { border: 2px inset gray; padding: 6px; color: black; vertical-align: top; }
+  h1 { color: #ff0000; font-size: 48px; text-shadow: 2px 2px yellow; }
+  h2 { color: #00ffff; background: red; display: inline-block; padding: 4px; }
+  .blink { animation: blink 0.8s step-start infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  img.photo { border: 3px solid black; width: 120px; height: 120px; }
+  .button {
+    font-family: "Comic Sans MS", cursive;
+    font-size: 20px;
+    background: yellow;
+    color: red;
+    border: 4px outset orange;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  hr { border: 3px dashed #ff00ff; }
+</style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo"><span class="dot"></span>HAMMER//BOX</div>
-        <div class="nav-links">
-            <a href="#how">How It Works</a>
-            <a href="#mascot">Brian Protocol</a>
-            <a href="#team">Operators</a>
-            <a href="https://github.com/Jomcabe/HammerInABox" target="_blank">GitHub</a>
-        </div>
-    </nav>
+<marquee behavior="alternate" scrollamount="12" style="background:black;color:lime;font-size:24px;">
+  *** WARNING *** TARGET ACQUIRED *** YOU WILL BE ROASTED *** WARNING ***
+</marquee>
 
-    <header class="hero">
-        <div class="hero-left">
-            <div class="tag"><span class="blink">●</span> SYSTEM ONLINE — TARGET ACQUISITION READY</div>
-            <h1 class="title">Hammer<span class="slash">/</span>In<span class="slash">/</span>A<span class="slash">/</span>Box</h1>
-            <p class="lede">
-                An AI-powered, ultrasonic-triggered, <strong>Terminator-grade roasting machine</strong>.
-                Detect a target. Identify them with Gemini. Roast them in T-800's voice.
-                Finish with a bark from Brian Griffin. Engineering at its most unhinged.
-            </p>
-            <div class="cta-row">
-                <a class="btn" href="https://github.com/Jomcabe/HammerInABox" target="_blank">▶ Pull Repo</a>
-                <a class="btn ghost" href="#how">View Schematics</a>
-            </div>
-            <div class="stack">
-                <span class="chip red">Arduino</span>
-                <span class="chip">HC-SR04 Ultrasonic</span>
-                <span class="chip">LCD I²C</span>
-                <span class="chip">Python</span>
-                <span class="chip red">Gemini API</span>
-                <span class="chip">OpenCV</span>
-                <span class="chip">TTS</span>
-            </div>
-        </div>
+<h1>~*~ HaMMeR iN a BoX ~*~</h1>
+<p class="blink" style="font-size:22px;color:red;">!!! TARGET ACQUISITION READY !!!</p>
+<p style="color:white;">An AI-powered, ultrasonic-triggered, <b>Terminator-grade roasting machine</b>.<br>
+Detect a target. Identify them with Gemini. Roast them in T-800's voice.<br>
+Finish with a bark from Brian Griffin. Engineering at its most unhinged.</p>
 
-        <aside class="hud" aria-hidden="true">
-            <div class="hud-header">
-                <span>TGT-SCAN.v1</span>
-                <span>● LIVE</span>
-            </div>
-            <div class="hud-row"><span class="k">SENSOR</span><span class="v">HC-SR04 :: OK</span></div>
-            <div class="hud-row"><span class="k">RANGE</span><span class="v">2.4m</span></div>
-            <div class="hud-row"><span class="k">MODEL</span><span class="v">GEMINI-VISION</span></div>
-            <div class="reticle"><span>LOCK</span></div>
-            <div class="hud-row"><span class="k">ROAST_GEN</span><span class="v">COMPILING…</span></div>
-            <div class="scan-bar"></div>
-            <div class="hud-row" style="margin-top:14px"><span class="k">PAYLOAD</span><span class="v">BRIAN.MP3</span></div>
-        </aside>
-    </header>
+<p>
+  <a href="https://github.com/Jomcabe/HammerInABox" target="_blank">[ CLICK HERE 4 GITHUB ]</a> &nbsp;|&nbsp;
+  <a href="#how">[ how it works ]</a> &nbsp;|&nbsp;
+  <a href="#mascot">[ the dog ]</a> &nbsp;|&nbsp;
+  <a href="#team">[ the guys ]</a>
+</p>
 
-    <section id="how">
-        <div class="section-eyebrow">/// the pipeline</div>
-        <h2 class="section-title">How the <em>Hammer</em> Drops</h2>
-        <p style="color:var(--muted); max-width:680px; margin-bottom:10px;">
-            Five stages of escalation, from passive detection to verbal annihilation.
-        </p>
-        <div class="pipeline">
-            <div class="step">
-                <div class="num">01</div>
-                <h3>Detect</h3>
-                <p>The ultrasonic sensor pings continuously, watching for a person to enter range.</p>
-            </div>
-            <div class="step">
-                <div class="num">02</div>
-                <h3>Status</h3>
-                <p>Arduino lights up the LCD: target locked, system armed, scanning sequence engaged.</p>
-            </div>
-            <div class="step">
-                <div class="num">03</div>
-                <h3>Capture</h3>
-                <p>The Arduino signals the laptop, which fires up the external camera and snaps a frame.</p>
-            </div>
-            <div class="step">
-                <div class="num">04</div>
-                <h3>Roast</h3>
-                <p>Gemini identifies the subject and generates a roast in the voice of the Terminator.</p>
-            </div>
-            <div class="step">
-                <div class="num">05</div>
-                <h3>Deliver</h3>
-                <p>Text-to-speech reads the roast. Then Brian Griffin barks. Target retreats.</p>
-            </div>
-        </div>
-    </section>
+<div class="box" style="display:inline-block;">
+  <b style="color:lime;font-family:monospace;">
+  built with:::<br>
+  Arduino + HC-SR04 Ultrasonic + LCD I2C + Python + Gemini API + OpenCV + TTS
+  </b>
+</div>
 
-    <section id="mascot" class="mascot-section">
-        <div class="mascot">
-            <div class="mascot-card">
-                <img
-                    src="https://upload.wikimedia.org/wikipedia/en/5/52/Brian_Griffin.png"
-                    alt="Brian Griffin"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                >
-                <div class="fallback" style="display:none; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%; background:#fff; color:#000;">
-                    🐕
-                    <div style="font-family:'Orbitron',sans-serif; font-size:1.5rem; margin-top:10px;">BRIAN</div>
-                </div>
-                <div class="corner-tag">// MASCOT.UNIT</div>
-                <div class="label">BARK.MP3 — DETERRENT</div>
-            </div>
-            <div class="mascot-text">
-                <div class="section-eyebrow">/// the deterrent</div>
-                <h2 class="section-title">The <em>Brian Griffin</em> Protocol</h2>
-                <p>
-                    Every great weapons system needs a closer. After the roast lands, the box
-                    plays a clip of Brian Griffin barking — a final, undignified push to send the
-                    target back where they came from.
-                </p>
-                <p>
-                    It is, scientifically speaking, the most effective civilian deterrent ever
-                    deployed in a dorm room.
-                </p>
-                <button class="audio-btn" onclick="document.getElementById('bark').play();">▶ Play Bark</button>
-                <audio id="bark" src="bark.mp3" preload="none"></audio>
-            </div>
-        </div>
-    </section>
+<hr>
 
-    <section id="team">
-        <div class="section-eyebrow">/// operators on-site</div>
-        <h2 class="section-title">The <em>Creators</em> From MIT</h2>
+<a name="how"></a>
+<h2>How the Hammer Drops</h2>
+<p style="color:white;">Five stages of escalation, from passive detection to verbal annihilation.</p>
+<table>
+  <tr>
+    <td><b>01 DETECT</b><br>The ultrasonic sensor pings continuously, watching for a person to enter range.</td>
+    <td><b>02 STATUS</b><br>Arduino lights up the LCD: target locked, system armed, scanning sequence engaged.</td>
+    <td><b>03 CAPTURE</b><br>The Arduino signals the laptop, which fires up the external camera and snaps a frame.</td>
+  </tr>
+  <tr>
+    <td><b>04 ROAST</b><br>Gemini identifies the subject and generates a roast in the voice of the Terminator.</td>
+    <td><b>05 DELIVER</b><br>Text-to-speech reads the roast. Then Brian Griffin barks. Target retreats.</td>
+    <td bgcolor="#ffff00"><marquee direction="up" height="80">it works on my laptop</marquee></td>
+  </tr>
+</table>
 
-        <div class="team-grid">
-            <div class="team-card">
-                <div class="team-photo-wrap">
-                    <span class="id">OP-01</span>
-                    <img src="Naim_photo.jpg" alt="Naim" class="team-photo">
-                </div>
-                <div class="team-body">
-                    <h3>Naim</h3>
-                    <p>Hardware engineer responsible for setting up designs of servos while implementing code to control them. Cameraman & Editor of final video presentation. Lead Feastables sourcer</p>
-                </div>
-            </div>
+<hr>
 
-            <div class="team-card">
-                <div class="team-photo-wrap">
-                    <span class="id">OP-02</span>
-                    <img src="Maeve_photo.jpg" alt="Maeve" class="team-photo">
-                </div>
-                <div class="team-body">
-                    <h3>Maeve</h3>
-                    <p>Systems specialist focusing on payload delivery mechanisms and implementations.</p>
-                </div>
-            </div>
+<a name="mascot"></a>
+<h2>The Brian Griffin Protocol</h2>
+<table>
+  <tr>
+    <td bgcolor="white" align="center">
+      <img src="https://upload.wikimedia.org/wikipedia/en/5/52/Brian_Griffin.png"
+           alt="Brian Griffin" width="160"
+           onerror="this.outerHTML='<div style=\'font-size:90px\'>🐕</div><b>BRIAN</b>';">
+      <br><b style="color:red;">BARK.MP3 - DETERRENT</b>
+    </td>
+    <td style="max-width:340px;">
+      Every great weapons system needs a closer. After the roast lands, the box
+      plays a clip of Brian Griffin barking - a final, undignified push to send the
+      target back where they came from.
+      <br><br>
+      It is, scientifically speaking, the most effective civilian deterrent ever
+      deployed in a dorm room.
+      <br><br>
+      <button class="button" onclick="document.getElementById('bark').play();">&gt;&gt; PLAY THE BARK &lt;&lt;</button>
+      <audio id="bark" src="bark.mp3" preload="none"></audio>
+    </td>
+  </tr>
+</table>
 
-            <div class="team-card">
-                <div class="team-photo-wrap">
-                    <span class="id">OP-03</span>
-                    <img src="Bill_photo.jpg" alt="Bill" class="team-photo">
-                </div>
-                <div class="team-body">
-                    <h3>Bill</h3>
-                    <p>Materials specialist, focusing on determining best materials for project and sourcing. Co-Engineered servo configuration & code</p>
-                </div>
-            </div>
+<hr>
 
-            <div class="team-card">
-                <div class="team-photo-wrap">
-                    <span class="id">OP-04</span>
-                    <img src="Jose_photo.jpg" alt="Jose Carvajal-Beltran" class="team-photo">
-                </div>
-                <div class="team-body">
-                    <h3>Jose Carvajal-Beltran</h3>
-                    <p>Format specialist ensuring all documentation is clear and well-structured. Ensured any code involving cameras and API was properly coded and integrated. Created this website.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<a name="team"></a>
+<h2>The Creators From MIT</h2>
+<table>
+  <tr>
+    <td align="center"><img src="Naim_photo.jpg" alt="Naim" class="photo"><br><b>Naim</b></td>
+    <td>Hardware engineer responsible for setting up designs of servos while implementing code to control them. Cameraman &amp; Editor of final video presentation. Lead Feastables sourcer</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="Maeve_photo.jpg" alt="Maeve" class="photo"><br><b>Maeve</b></td>
+    <td>Systems specialist focusing on payload delivery mechanisms and implementations.</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="Bill_photo.jpg" alt="Bill" class="photo"><br><b>Bill</b></td>
+    <td>Materials specialist, focusing on determining best materials for project and sourcing. Co-Engineered servo configuration &amp; code</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="Jose_photo.jpg" alt="Jose Carvajal-Beltran" class="photo"><br><b>Jose Carvajal-Beltran</b></td>
+    <td>Format specialist ensuring all documentation is clear and well-structured. Ensured any code involving cameras and API was properly coded and integrated. Created this website.</td>
+  </tr>
+</table>
 
-    <footer>
-        BUILT AT MIT &nbsp;//&nbsp; POWERED BY GEMINI &nbsp;//&nbsp; DETERRED BY <span class="heart">BRIAN ♥</span>
-    </footer>
+<hr>
+
+<marquee scrollamount="6" style="color:white;font-size:18px;">
+  BUILT AT MIT // POWERED BY GEMINI // DETERRED BY BRIAN &lt;3 ...
+</marquee>
+
+<p style="font-size:12px;color:black;">
+  <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='40'><rect width='80' height='40' fill='yellow'/><text x='4' y='25' font-size='14'>UNDER CONSTR</text></svg>" alt="under construction"><br>
+  Copyright 2024. This page is NOT done yet. Sign my guestbook!!!<br>
+  You are visitor number <span class="blink" style="background:black;color:lime;font-family:monospace;">00000001</span>
+</p>
 
 </body>
 </html>
