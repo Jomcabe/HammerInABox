@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f6f2e8">
+  <title>One nail.</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      background: #f6f2e8;
+      color: #39372f;
+      font-family: Georgia, serif;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      font: 12px/1.5 monospace;
+    }
+    a { color: inherit; text-underline-offset: 4px; }
+    button { color: inherit; cursor: pointer; font: inherit; }
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid #74503a;
+      outline-offset: 5px;
+    }
+    .sound {
+      border: 0;
+      padding: 8px;
+      background: transparent;
+      font: 12px/1.5 monospace;
+    }
+    main {
+      width: min(100%, 800px);
+      margin: auto;
+      padding: 16px 20px 28px;
+      text-align: center;
+    }
+    h1 { margin: 0; font-size: clamp(38px, 7vw, 52px); font-weight: normal; letter-spacing: -2px; }
+    .intro { margin: 10px 0 0; font-size: 16px; font-style: italic; }
+    .bench {
+      display: block;
+      width: 100%;
+      border: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .bench:disabled { cursor: default; }
+    canvas { display: block; width: 100%; height: auto; }
+    .instruction { margin: -8px 0 18px; font: 12px/1.7 monospace; }
+    .note { min-height: 48px; margin: 0; font-size: 18px; line-height: 1.5; }
+    .tools { min-height: 56px; display: flex; gap: 12px; justify-content: center; align-items: center; }
+    .tools button { border: 1px solid #a7a08f; background: transparent; padding: 9px 17px; font: 12px/1.5 monospace; }
+    .tools button:hover { border-color: #39372f; background: #eee7d7; }
+    [hidden] { display: none !important; }
+    footer { padding: 0 20px 22px; text-align: center; color: #817a6d; font: 11px/1.6 monospace; }
+    @media (max-width: 480px) {
+      nav { padding: 12px 16px; }
+      main { padding: 16px 12px 20px; }
+      .note { font-size: 16px; }
+      .instruction { max-width: 260px; margin: 0 auto 18px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="./">&larr; back outside</a>
+    <button class="sound" type="button" aria-pressed="false">sound: off</button>
+  </nav>
+  <main>
+    <h1>One nail.</h1>
+    <p class="intro">A very small job.</p>
+    <button class="bench" type="button" aria-label="Swing the hammer">
+      <canvas width="760" height="400" aria-hidden="true"></canvas>
+    </button>
+    <p class="instruction">Tap when the hammer is over the nail.<br>Space works too.</p>
+    <p class="note" role="status" aria-live="polite">There&rsquo;s no score. It&rsquo;s a nail.</p>
+    <div class="tools">
+      <button class="straighten" type="button" hidden>straighten it</button>
+      <button class="again" type="button" hidden>another nail</button>
+    </div>
+    <noscript><p>This little job needs JavaScript.</p></noscript>
+  </main>
+  <footer>Jose Carvajal-Beltran &middot; the small works department</footer>
+  <script>
+    (() => {
+      'use strict';
+
+      const canvas = document.querySelector('canvas');
+      const ctx = canvas.getContext('2d');
+      const bench = document.querySelector('.bench');
+      const note = document.querySelector('.note');
+      const straighten = document.querySelector('.straighten');
+      const again = document.querySelector('.again');
+      const sound = document.querySelector('.sound');
+      const quietMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const ratio = Math.min(devicePixelRatio || 1, 2);
+      canvas.width = 760 * ratio;
+      canvas.height = 400 * ratio;
+
+      const nailX = 380;
+      const boardY = 276;
+      const nailLength = 84;
+      const state = {
+        depth: 6, bend: 0, time: 0, phase: 0,
+        swing: null, particles: [], dents: [],
+        done: false, shake: 0, soundOn: false
+      };
+      let audio = null;
+      let previous = null;
+      let seed = 173;
+      const random = () => {
+        seed = (seed * 16807) % 2147483647;
+        return (seed - 1) / 2147483646;
+      };
+      const grain = Array.from({length: 58}, () => ({
+        x: 100 + random() * 560,
+        y: 280 + random() * 60,
+        length: 12 + random() * 170,
+        wave: random() * 7,
+        opacity: .05 + random() * .13
+      }));
+
+      const nailTop = () => {
+        const length = nailLength - state.depth;
+        return {
+          x: nailX + Math.sin(state.bend) * length,
+          y: boardY - Math.cos(state.bend) * length
+        };
+      };
+
+      const hammerX = () => nailTop().x + (
+        quietMotion ? 0 : Math.sin(state.time * .0028 + state.phase) * 104
+      );
+
+      function thunk(strength, metal) {
+        if (!state.soundOn) return;
+        try {
+          if (!audio) {
+            const Audio = window.AudioContext || window.webkitAudioContext;
+            if (!Audio) return;
+            audio = new Audio();
+          }
+          if (audio.state === 'suspended') audio.resume().catch(() => {});
+          const now = audio.currentTime;
+          const oscillator = audio.createOscillator();
+          const gain = audio.createGain();
+          oscillator.type = 'triangle';
+          oscillator.frequency.setValueAtTime(metal ? 630 : 190, now);
+          oscillator.frequency.exponentialRampToValueAtTime(65, now + .09);
+          gain.gain.setValueAtTime(.15 * strength, now);
+          gain.gain.exponentialRampToValueAtTime(.001, now + .13);
+          oscillator.connect(gain).connect(audio.destination);
+          oscillator.start(now);
+          oscillator.stop(now + .14);
+        } catch {
+          // The job still works if this browser cannot make a sound.
+        }
+      }
+
+      function strike() {
+        if (state.done || state.swing) return;
+        state.swing = {age: 0, x: hammerX(), target: nailTop(), hit: false};
+      }
+
+      function impact(swing) {
+        const offset = swing.x - swing.target.x;
+        const distance = Math.abs(offset);
+        state.shake = quietMotion ? 0 : 5;
+
+        if (distance < 20) {
+          const drive = (19 - distance * .34) * (1 - Math.abs(state.bend) * .6);
+          state.depth = Math.min(nailLength, state.depth + drive);
+          thunk(1, true);
+          if (state.depth === nailLength) {
+            state.done = true;
+            bench.disabled = true;
+            straighten.hidden = true;
+            again.hidden = false;
+            note.textContent = 'That’ll hold.';
+          } else {
+            note.textContent = distance < 7 ? 'A good, square hit.' : 'Getting there.';
+          }
+        } else if (distance < 43) {
+          state.bend = Math.max(-.65, Math.min(.65, state.bend + Math.sign(offset) * .21));
+          straighten.hidden = false;
+          thunk(.65, true);
+          note.textContent = Math.abs(state.bend) > .4 ? 'You’ve invented an elbow.' : 'Slight change of plans.';
+        } else {
+          state.dents.push({x: swing.x, size: 2 + Math.random() * 2});
+          if (state.dents.length > 24) state.dents.shift();
+          thunk(.7, false);
+          note.textContent = 'The wood noticed.';
+        }
+
+        if (!quietMotion) {
+          for (let i = 0; i < 6; i++) {
+            state.particles.push({
+              x: swing.x, y: distance < 43 ? swing.target.y : boardY,
+              vx: (Math.random() - .5) * 2.8,
+              vy: -1 - Math.random() * 2.5,
+              age: 0, metal: distance < 43
+            });
+          }
+        }
+      }
+
+      function wood() {
+        ctx.fillStyle = 'rgba(60, 45, 29, .09)';
+        ctx.beginPath();
+        ctx.ellipse(382, 355, 285, 12, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#b58952';
+        ctx.beginPath();
+        ctx.moveTo(94, boardY + 6);
+        ctx.lineTo(664, boardY + 4);
+        ctx.lineTo(654, 345);
+        ctx.lineTo(103, 348);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = '#d4b17a';
+        ctx.beginPath();
+        ctx.moveTo(95, boardY);
+        ctx.lineTo(665, boardY - 2);
+        ctx.lineTo(660, 332);
+        ctx.lineTo(99, 336);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.save();
+        ctx.clip();
+        for (const line of grain) {
+          ctx.strokeStyle = `rgba(96, 65, 32, ${line.opacity})`;
+          ctx.lineWidth = .8;
+          ctx.beginPath();
+          ctx.moveTo(line.x, line.y);
+          ctx.bezierCurveTo(line.x + line.length * .3, line.y - line.wave,
+            line.x + line.length * .65, line.y + line.wave,
+            line.x + line.length, line.y - 1);
+          ctx.stroke();
+        }
+        ctx.strokeStyle = 'rgba(98, 65, 32, .23)';
+        for (let i = 0; i < 5; i++) {
+          ctx.beginPath();
+          ctx.ellipse(534, 307, 10 + i * 7, 2 + i * 1.5, -.09, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        ctx.fillStyle = 'rgba(78, 53, 30, .4)';
+        for (const dent of state.dents) {
+          ctx.beginPath();
+          ctx.ellipse(dent.x, boardY + 2, dent.size * 2, dent.size, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function nail() {
+        const top = nailTop();
+        ctx.strokeStyle = 'rgba(61, 45, 25, .16)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(nailX, boardY + 2);
+        ctx.lineTo(nailX + (nailLength - state.depth) * .55, boardY + 14);
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(nailX, boardY);
+        ctx.rotate(state.bend);
+        const length = nailLength - state.depth;
+        ctx.fillStyle = '#686e6e';
+        ctx.fillRect(-2, -length, 4, length + 3);
+        ctx.fillStyle = '#c1c5bf';
+        ctx.fillRect(-1.5, -length, 1, length);
+        ctx.fillStyle = '#575e5f';
+        ctx.beginPath();
+        ctx.ellipse(0, -length, 11, 3.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#bdc3bf';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(-7, -length - 1);
+        ctx.lineTo(6, -length - 1);
+        ctx.stroke();
+        ctx.restore();
+        return top;
+      }
+
+      function hammer(x, y, tilt) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(tilt);
+        ctx.fillStyle = '#8e5936';
+        ctx.beginPath();
+        ctx.moveTo(-6, -2);
+        ctx.lineTo(4, -2);
+        ctx.lineTo(9, -113);
+        ctx.quadraticCurveTo(-1, -118, -10, -113);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = '#bc8860';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-4, -16);
+        ctx.lineTo(-5, -104);
+        ctx.stroke();
+
+        ctx.fillStyle = '#565a57';
+        ctx.beginPath();
+        ctx.moveTo(-28, -14);
+        ctx.lineTo(20, -14);
+        ctx.lineTo(37, -7);
+        ctx.lineTo(49, 14);
+        ctx.lineTo(39, 11);
+        ctx.lineTo(29, 0);
+        ctx.lineTo(17, 1);
+        ctx.lineTo(17, 12);
+        ctx.lineTo(-28, 12);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#858a82';
+        ctx.fillRect(-29, -15, 9, 28);
+        ctx.strokeStyle = '#a7aba1';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(-18, -11);
+        ctx.lineTo(16, -11);
+        ctx.lineTo(32, -5);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function stamp() {
+        ctx.save();
+        ctx.translate(581, 219);
+        ctx.rotate(-.12);
+        ctx.strokeStyle = 'rgba(122, 70, 51, .65)';
+        ctx.fillStyle = 'rgba(122, 70, 51, .65)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(-62, -16, 124, 32);
+        ctx.font = '13px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('GOOD ENOUGH', 0, 5);
+        ctx.restore();
+      }
+
+      function frame(now) {
+        const dt = previous === null ? 0 : Math.min(40, now - previous);
+        previous = now;
+        if (!document.hidden) state.time += dt;
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        ctx.clearRect(0, 0, 760, 400);
+        ctx.save();
+        if (state.shake > .1) {
+          ctx.translate(Math.sin(now * .12) * state.shake, Math.cos(now * .09) * state.shake * .4);
+          state.shake *= .76;
+        }
+
+        wood();
+        nail();
+        if (state.swing) {
+          const swing = state.swing;
+          swing.age += dt;
+          const impactTime = 155;
+          const strikeY = (Math.abs(swing.x - swing.target.x) < 43 ? swing.target.y : boardY) - 12;
+          let y, tilt;
+          if (swing.age < impactTime) {
+            const t = swing.age / impactTime;
+            y = 149 + (strikeY - 149) * t * t;
+            tilt = -.22 * (1 - t);
+          } else {
+            if (!swing.hit) {
+              swing.hit = true;
+              impact(swing);
+            }
+            const t = Math.min(1, (swing.age - impactTime) / 260);
+            y = strikeY + (149 - strikeY) * (1 - Math.pow(1 - t, 3));
+            tilt = .06 * Math.sin(t * Math.PI);
+          }
+          hammer(swing.x, y, tilt);
+          if (swing.age > 415) state.swing = null;
+        } else if (!state.done) {
+          hammer(hammerX(), 149, quietMotion ? 0 : Math.sin(state.time * .0028) * .035);
+        }
+
+        for (const particle of state.particles) {
+          const step = dt / 16.67;
+          particle.age += dt;
+          particle.x += particle.vx * step;
+          particle.y += particle.vy * step;
+          particle.vy += .11 * step;
+          ctx.globalAlpha = Math.max(0, 1 - particle.age / 350);
+          ctx.fillStyle = particle.metal ? '#72766e' : '#ab7a43';
+          ctx.fillRect(particle.x, particle.y, 2, 2);
+        }
+        state.particles = state.particles.filter(p => p.age < 350);
+        ctx.globalAlpha = 1;
+        if (state.done) stamp();
+        ctx.restore();
+        requestAnimationFrame(frame);
+      }
+
+      bench.addEventListener('click', strike);
+      document.addEventListener('keydown', event => {
+        if (event.code !== 'Space' || event.repeat) return;
+        if (event.target.closest('button, a, input, textarea, select')) return;
+        event.preventDefault();
+        strike();
+      });
+      straighten.addEventListener('click', () => {
+        if (state.swing || state.done) return;
+        state.bend = 0;
+        straighten.hidden = true;
+        note.textContent = 'Nobody saw that.';
+        bench.focus({preventScroll: true});
+      });
+      again.addEventListener('click', () => {
+        if (state.swing) return;
+        state.depth = 6;
+        state.bend = 0;
+        state.done = false;
+        state.phase = Math.random() * Math.PI * 2;
+        state.particles = [];
+        bench.disabled = false;
+        again.hidden = true;
+        straighten.hidden = true;
+        note.textContent = 'All right. One more.';
+        bench.focus({preventScroll: true});
+      });
+      sound.addEventListener('click', () => {
+        state.soundOn = !state.soundOn;
+        sound.textContent = state.soundOn ? 'sound: on' : 'sound: off';
+        sound.setAttribute('aria-pressed', String(state.soundOn));
+        if (state.soundOn) thunk(.25, false);
+      });
+      document.addEventListener('visibilitychange', () => { previous = null; });
+      requestAnimationFrame(frame);
+    })();
+  </script>
+</body>
+</html>

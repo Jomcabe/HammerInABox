@@ -40,9 +40,36 @@
       font-size: 12px;
       line-height: 20px;
     }
+
+    .elsewhere {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid #ddd;
+      border-radius: 50%;
+      background: #fff;
+      color: #777;
+      font-size: 15px;
+      text-decoration: none;
+    }
+
+    .elsewhere:hover {
+      border-color: #777;
+      color: #222;
+    }
+
+    .elsewhere:focus-visible {
+      outline: 2px solid #222;
+      outline-offset: 4px;
+    }
   </style>
 </head>
 <body>
+  <a class="elsewhere" href="elsewhere.html" aria-label="Go somewhere else">?</a>
   <main>
     <img src="sad-face.png" alt="A blue sad face" width="554" height="554">
   </main>
