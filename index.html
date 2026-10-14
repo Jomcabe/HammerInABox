@@ -1,318 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>~*~ HaMMeR iN a BoX !!! WeLCoMe ~*~ (best viewed in 800x600) (NOW WITH 420% MORE HAMMER)</title>
-<style>
-  body {
-    font-family: "Comic Sans MS", "Comic Sans", cursive;
-    background-color: #00aa00;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'><text x='2' y='32' font-size='28'>🔨</text><text x='26' y='20' font-size='18'>💀</text></svg>");
-    color: #ffff00;
-    text-align: center;
-    margin: 0;
-    cursor: crosshair;
-    overflow-x: hidden;
-  }
-  a { color: #0000ee; text-decoration: underline; }
-  a:visited { color: purple; }
-  marquee { font-weight: bold; }
-  .box {
-    border: 6px ridge #ff0000;
-    background-color: #000080;
-    margin: 10px auto;
-    padding: 8px;
-    max-width: 620px;
-    box-shadow: 6px 6px 0px black;
-  }
-  table { margin: 0 auto; border: 4px outset gray; background: #c0c0c0; }
-  td { border: 2px inset gray; padding: 6px; color: black; vertical-align: top; }
-  h1 {
-    color: #ff0000;
-    font-size: 52px;
-    text-shadow: 3px 3px 0px yellow, -2px -2px 0px cyan;
-    transform: scaleX(1.18) skew(-3deg);
-    letter-spacing: 3px;
-    filter: saturate(2) contrast(1.3);
-    margin-bottom: 0;
-  }
-  h2 {
-    color: #00ffff;
-    background: red;
-    display: inline-block;
-    padding: 4px 10px;
-    border: 3px outset white;
-    transform: rotate(-0.7deg) scaleX(1.08);
-    text-shadow: 2px 2px black;
-  }
-  .blink { animation: blink 0.75s step-start infinite; }
-  @keyframes blink { 50% { opacity: 0; } }
-  @keyframes rainbow { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
-  @keyframes shake { 0%,100%{ transform: translate(0,0) scaleX(1.18) skew(-3deg); } 25%{ transform: translate(1px,1px) scaleX(1.19) skew(-3.5deg); } 50%{ transform: translate(-1px,0) scaleX(1.17) skew(-2.5deg); } }
-  .rainbow { animation: rainbow 1.2s linear infinite; }
-  .shake { animation: shake 0.15s infinite; }
-  img.photo { border: 3px solid black; object-fit: fill; display: block; margin: 0 auto; }
-  .button {
-    font-family: "Comic Sans MS", cursive;
-    font-size: 19px;
-    background: yellow;
-    color: red;
-    border: 4px outset orange;
-    cursor: pointer;
-    font-weight: bold;
-    padding: 6px 12px;
-    box-shadow: 3px 3px 0px black;
-  }
-  .button:active { border-style: inset; transform: translate(1px,1px); }
-  hr { border: 3px dashed #ff00ff; margin: 18px 0; }
-  .hitmarker {
-    position: fixed;
-    width: 60px;
-    height: 60px;
-    pointer-events: none;
-    opacity: 0.85;
-    z-index: 9999;
-    font-size: 50px;
-    line-height: 60px;
-    text-shadow: 2px 2px 0px black;
-  }
-  .hit-tl { top: 8px; left: 8px; }
-  .hit-tr { top: 8px; right: 8px; transform: scaleX(-1); }
-  .hit-bl { bottom: 8px; left: 8px; transform: scaleY(-1); }
-  .hit-br { bottom: 8px; right: 8px; transform: scale(-1); }
-  .mlg-banner {
-    background: linear-gradient(90deg, red, yellow, lime, cyan, magenta);
-    color: black;
-    font-family: Impact, sans-serif;
-    font-size: 20px;
-    padding: 4px;
-    border: 3px ridge white;
-    letter-spacing: 2px;
-    transform: scaleY(1.2);
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HammerInABox</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      background: #fff;
+      color: #666;
+      font-family: Arial, sans-serif;
+    }
+
+    main {
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 554px;
+      max-width: min(554px, calc(100svh - 108px));
+      height: auto;
+    }
+
+    footer {
+      padding: 16px 24px 24px;
+      text-align: center;
+      font-size: 12px;
+      line-height: 20px;
+    }
+  </style>
 </head>
 <body>
-
-<div class="hitmarker hit-tl">✖</div>
-<div class="hitmarker hit-tr">✖</div>
-<div class="hitmarker hit-bl">✖</div>
-<div class="hitmarker hit-br">✖</div>
-
-<marquee behavior="alternate" scrollamount="14" style="background:black;color:lime;font-size:24px;border-bottom: 3px solid red;">
-  *** ⚠️ WARNING ⚠️ TARGET ACQUIRED *** YOU WILL BE ROASTED *** 360 NOSCOPE HAMMER INCOMING *** WARNING ***
-</marquee>
-
-<div style="background: yellow; color: red; font-family: monospace; font-size: 13px; padding: 2px; border: 2px dashed black;">
-  <span class="blink">🔨🔨🔨</span> BEST VIEWED IN NETSCAPE NAVIGATOR 4.0 AT 800x600 - 256 COLORS - GET FLASH PLAYER <span class="blink">🔨🔨🔨</span>
-</div>
-
-<h1 class="shake">~*~ HaMMeR iN a BoX ~*~</h1>
-<p style="margin-top:2px;font-size:14px;color:cyan;letter-spacing:2px;transform:scaleX(1.25);font-family: monospace;">★★★ MLG PRO EDITION - DORITOS & MOUNTAIN DEW FUELED ★★★</p>
-
-<p class="blink" style="font-size:22px;color:red;background:yellow;display:inline-block;padding:2px 8px;border:3px outset white;">!!! TARGET ACQUISITION READY !!! [AIRHORN READY]</p>
-
-<table style="margin:12px auto;background:black;border:3px ridge lime;">
-<tr>
-<td style="background:black;border:none;padding:2px;"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/GIF_mountain_dew_logo.gif" onerror="this.style.display='none'" width="88" height="52" style="object-fit:fill;filter:saturate(2);" alt="dew"></td>
-<td style="background:black;color:lime;font-family:monospace;font-size:13px;border:none;vertical-align:middle;">
-  An AI-powered, ultrasonic-triggered, <b style="color:yellow;">Terminator-grade roasting machine</b>.<br>
-  Detect a target. Identify them with Gemini. Roast them in T-800 voice.<br>
-  Finish with a bark from Brian Griffin. <span style="color:red;background:yellow;padding:0 4px;">GET REKT M8</span>
-</td>
-<td style="background:black;border:none;padding:2px;"><img src="https://static.wikia.nocookie.net/familyguy/images/7/70/Brian_Griffin.png" width="52" height="62" style="object-fit:fill;transform:scaleX(1.35);filter:contrast(1.5);" alt="brian small" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/en/5/52/Brian_Griffin.png&w=120';"></td>
-</tr>
-</table>
-
-<p>
-  <a href="https://github.com/Jomcabe/HammerInABox" target="_blank">[ CLICK HERE 4 GITHUB ]</a> &nbsp;|&nbsp;
-  <a href="#how">[ how it works ]</a> &nbsp;|&nbsp;
-  <a href="#mascot">[ the dog ]</a> &nbsp;|&nbsp;
-  <a href="#team">[ the guys ]</a> &nbsp;|&nbsp;
-  <a href="#" onclick="airhorn();return false;" style="background:yellow;color:red;padding:1px 4px;border:2px outset orange;">[ AIRHORN ]</a>
-</p>
-
-<div class="box">
-  <b style="color:lime;font-family:monospace;font-size:13px;">
-  <span class="rainbow" style="display:inline-block;">built with:::</span><br>
-  Arduino + HC-SR04 Ultrasonic + LCD I2C + Python + Gemini API + OpenCV + TTS<br>
-  <span style="color:cyan;font-size:11px;">+ DORITOS™ + MOUNTAIN DEW™ + SWEAT + NO SLEEP + YHACK 2024</span>
-  </b>
-</div>
-
-<div class="mlg-banner">💥 ILLUMINATI CONFIRMED - HAMMER = 5 LETTERS - BOX = 3 LETTERS - 5+3=8 - 8/2=4 - 4 SIDED BOX = HAMMER IN A BOX 💥</div>
-
-<hr>
-
-<a name="how"></a>
-<h2>How the Hammer Drops <span style="font-size:12px;background:yellow;color:red;padding:1px 4px;vertical-align:middle;">NEW!!</span></h2>
-<p style="color:white;font-size:13px;">Five stages of escalation, from passive detection to verbal annihilation. <i style="color:lime;">(it works on my laptop i swear)</i></p>
-<table style="max-width:760px;">
-  <tr>
-    <td style="background:#c0c0c0;width:33%;"><b>01 DETECT</b> <span style="color:red;">[ULTRASONIC]</span><br><span style="font-size:13px;">The ultrasonic sensor pings continuously, watching for a person to enter range. <span style="background:lime;">*ping* *ping*</span></span></td>
-    <td style="background:#c0c0c0;width:33%;"><b>02 STATUS</b><br><span style="font-size:13px;">Arduino lights up the LCD: target locked, system armed, scanning sequence engaged. <font color="red">pew pew</font></span></td>
-    <td style="background:#c0c0c0;width:33%;"><b>03 CAPTURE</b><br><span style="font-size:13px;">The Arduino signals the laptop, which fires up the external camera and snaps a frame. 📸 <i>say cheese nerd</i></span></td>
-  </tr>
-  <tr>
-    <td style="background:#c0c0c0;"><b>04 ROAST</b> 🔥<br><span style="font-size:13px;">Gemini identifies the subject and generates a roast in the voice of the Terminator. <b style="color:red;">HASTA LA VISTA BABY</b></span></td>
-    <td style="background:#c0c0c0;"><b>05 DELIVER</b> 🔊<br><span style="font-size:13px;">Text-to-speech reads the roast. Then Brian Griffin barks. Target retreats. <span class="blink" style="color:red;">WASTED</span></span></td>
-    <td bgcolor="#ffff00" style="padding:0;overflow:hidden;"><marquee direction="up" height="80" scrollamount="3" style="font-family:monospace;font-size:12px;color:red;">it works on my laptop<br><br>pls dont touch the wires<br><br>COM4 or COM5 ???<br><br>idk man it compiled<br><br>GET NOSCOPED</marquee></td>
-  </tr>
-</table>
-
-<div style="margin:10px auto;max-width:760px;background:black;border:2px ridge red;padding:4px;font-family:monospace;color:lime;font-size:12px;text-align:left;">
-  &gt; C:\HammerInABox\terminator.py - Booting Skynet...<br>
-  &gt; [SYSTEM] Connected to Arduino on COM4 (maybe COM5 idk try both)<br>
-  &gt; [SYSTEM] Terminator Online. Waiting for targets... <span class="blink">_</span>
-</div>
-
-<hr>
-
-<a name="mascot"></a>
-<h2 style="background: #ff00ff;">The Brian Griffin Protocol <img src="https://static.wikia.nocookie.net/familyguy/images/7/70/Brian_Griffin.png" alt="Brian Griffin" style="height:26px; vertical-align:middle; object-fit:fill; width:22px; filter: contrast(1.4) saturate(1.6); border:1px ridge white; transform:scaleX(1.15);" referrerpolicy="no-referrer" onerror="this.style.display='none'">💥</h2>
-<table style="max-width:700px;">
-  <tr>
-    <td bgcolor="white" align="center" style="width:190px;vertical-align:middle;">
-      <img src="https://static.wikia.nocookie.net/familyguy/images/7/70/Brian_Griffin.png"
-           alt="Brian Griffin" 
-           style="width: 188px; height: 132px; object-fit: fill; transform: scaleX(1.24); filter: contrast(1.4) saturate(1.9) drop-shadow(3px 3px 0px lime); border: 3px ridge black; image-rendering: auto;"
-           referrerpolicy="no-referrer"
-           onerror="this.onerror=null;this.src='https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/en/5/52/Brian_Griffin.png&w=400'; this.onerror=function(){this.onerror=null;this.outerHTML='<div style=\'background:yellow;color:red;border:3px ridge black;padding:16px;font-family:monospace;font-weight:bold;font-size:12px;\'>[BRIAN.JPG NOT FOUND]<br>TRY REFRESH NOOB</div>'}">
-      <br><b style="color:red;font-size:11px;letter-spacing:1px;">BARK.MP3 - DETERRENT v2.1</b><br>
-      <span style="font-size:10px;color:black;font-family:monospace;">[STRETCHED FOR MAXIMUM BARK]</span>
-    </td>
-    <td style="max-width:340px;text-align:left;font-size:13px;">
-      Every great weapons system needs a closer. After the roast lands, the box
-      plays a clip of Brian Griffin barking - a final, undignified push to send the
-      target back where they came from.
-      <br><br>
-      It is, scientifically speaking, the most effective civilian deterrent ever
-      deployed in a dorm room. <span style="background:yellow;">(MIT peer reviewed trust us)</span>
-      <br><br>
-      <button class="button" onclick="document.getElementById('bark').play().catch(()=>alert('bark.mp3 missing - check volume')); airhorn();">&gt;&gt; PLAY THE BARK 💥 &lt;&lt;</button>
-      <button class="button" onclick="airhorn()" style="font-size:12px;background:lime;margin-top:6px;">🎺 MLG AIRHORN</button>
-      <audio id="bark" src="bark.mp3" preload="auto"></audio>
-      <br><span style="font-size:10px;color:#666;">* may cause hearing damage * turn down ur volume noob</span>
-      <br><span style="font-size:10px;color:#999;font-family:monospace;">if bark is silent, check that bark.mp3 is in repo root on Pages</span>
-    </td>
-  </tr>
-</table>
-
-<div style="margin: 14px auto; font-size: 28px; letter-spacing: 10px; filter: drop-shadow(2px 2px 0px red) saturate(2);">
-  🔨 💀 🔨 💀 🔨
-</div>
-
-<hr>
-
-<a name="team"></a>
-<h2>The Creators From MIT <span style="background:yellow;color:red;font-size:10px;padding:2px;vertical-align:middle;">ELITE HAX0RS</span></h2>
-<p style="color:white;font-size:11px;font-family:monospace;">* photos stretched for artistic vision * do not adjust ur monitor *</p>
-<table style="max-width:760px;">
-  <tr>
-    <td align="center" style="width:200px;background:white;">
-      <img src="Naim_photo.jpg" alt="Naim" class="photo" style="width: 182px; height: 112px; object-fit: fill; transform: scaleX(1.22); filter: contrast(1.35) saturate(1.7); border: 4px ridge red; image-rendering: auto;"><br>
-      <b style="color:red;font-size:16px;transform:scaleX(1.3);display:inline-block;filter:drop-shadow(1px 1px 0px yellow);">Naim</b><br>
-      <span style="font-size:10px;color:blue;font-family:monospace;">[WIDE LOAD HAMMER TIME]</span>
-    </td>
-    <td style="text-align:left;font-size:12px;">Hardware engineer responsible for setting up designs of servos while implementing code to control them. Cameraman &amp; Editor of final video presentation. Lead Feastables sourcer <span style="background:lime;">[sponsored? no lol]</span></td>
-  </tr>
-  <tr>
-    <td align="center" style="background:white;">
-      <img src="Maeve_photo.jpg" alt="Maeve" class="photo" style="width: 142px; height: 144px; object-fit: fill; transform: scaleY(1.08) scaleX(1.08); filter: hue-rotate(8deg) saturate(1.9) contrast(1.2); border: 5px outset lime; image-rendering: auto;"><br>
-      <b style="color:#ff00ff;font-size:16px;">Maeve</b><br>
-      <span style="font-size:10px;color:green;font-family:monospace;">[VERTICAL STRETCH 4 STYLE]</span>
-    </td>
-    <td style="text-align:left;font-size:12px;">Systems specialist focusing on payload delivery mechanisms and implementations. <i style="color:red;">payload = roast + bark combo wombo</i></td>
-  </tr>
-  <tr>
-    <td align="center" style="background:white;">
-      <img src="Bill_photo.jpg" alt="Bill" class="photo" style="width: 176px; height: 116px; object-fit: fill; transform: scaleX(1.28); filter: contrast(1.5) saturate(1.6) hue-rotate(-10deg); border: 4px groove yellow; image-rendering: auto;"><br>
-      <b style="color:blue;font-size:16px;letter-spacing:2px;">Bill</b><br>
-      <span style="font-size:10px;color:red;font-family:monospace;">[CINEMATIC 16:9]</span>
-    </td>
-    <td style="text-align:left;font-size:12px;">Materials specialist, focusing on determining best materials for project and sourcing. Co-Engineered servo configuration &amp; code <span style="background:yellow;">[he touched grass to find the best hammer]</span></td>
-  </tr>
-  <tr>
-    <td align="center" style="background:white;">
-      <img src="Jose_photo.jpg" alt="Jose Carvajal-Beltran" class="photo" style="width: 168px; height: 126px; object-fit: fill; transform: scaleX(1.18) scaleY(1.06); filter: contrast(1.3) saturate(2) drop-shadow(2px 2px 0px cyan); border: 4px ridge cyan; image-rendering: auto;"><br>
-      <b style="color:black;font-size:13px;background:yellow;padding:1px 4px;">Jose Carvajal-Beltran</b><br>
-      <span style="font-size:10px;color:purple;font-family:monospace;">[MLG STRETCH™ - JUST RIGHT]</span>
-    </td>
-    <td style="text-align:left;font-size:12px;">Format specialist ensuring all documentation is clear and well-structured. Ensured any code involving cameras and API was properly coded and integrated. Created this website. <font color="red"><b>[webmaster]</b></font></td>
-  </tr>
-</table>
-
-<div style="margin:12px auto;max-width:760px;background:#000080;border:4px ridge yellow;padding:6px;">
-  <span style="color:lime;font-family:monospace;font-size:12px;">!!! SECRET UNLOCKED: ALL TEAM PHOTOS ARE NOW <span style="background:red;color:white;padding:0 4px;">15-28% STRETCHED</span> FOR MAXIMUM MLG AESTHETIC !!!</span><br>
-  <span style="color:yellow;font-size:10px;">not too stretched tho we kept it classy - like a 2014 youtube thumbnail with impact font</span>
-</div>
-
-<hr>
-
-<div style="background:black;border:3px ridge lime;padding:6px;max-width:760px;margin:0 auto;">
-<marquee scrollamount="7" style="color:white;font-size:16px;">
-  BUILT AT MIT // POWERED BY GEMINI // DETERRED BY BRIAN &lt;3 // <span style="color:lime;">🔨 GET HAMMERED 🔨</span> // 420 NOSCOPE // <span style="color:yellow;">DORITOS LOCOS HAMMER</span> // BUILT AT MIT // POWERED BY GEMINI // DETERRED BY BRIAN &lt;3 ...
-</marquee>
-</div>
-
-<p style="font-size:12px;color:black;margin-top: 14px;">
-  <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='88' height='32'><rect width='88' height='32' fill='yellow' stroke='red' stroke-width='2'/><text x='4' y='20' font-size='11' font-family='monospace'>UNDER CONSTR</text></svg>" alt="under construction" style="border:2px ridge gray;filter:saturate(2);">
-  <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='88' height='32'><rect width='88' height='32' fill='lime' stroke='black' stroke-width='2'/><text x='8' y='20' font-size='10' font-family='monospace'>*HAMMER TIME*</text></svg>" alt="hammer time" style="border:2px ridge gray;margin-left:4px;">
-  <br>
-  <span style="background:white;color:black;padding:1px 4px;font-family:monospace;">Copyright 2024-2026. This page is NOT done yet. Sign my guestbook!!!</span><br>
-  <span style="background:black;color:lime;font-family:monospace;padding:2px 6px;border:2px inset gray;">You are visitor number <span class="blink" style="background:black;color:lime;">00001337</span> <span style="color:yellow;">(ELITE)</span></span><br>
-  <span style="font-size:10px;color:black;">This site is best viewed with <b>eyes open</b> <span style="background:yellow;">- webmaster Jose</span></span><br>
-  <span style="font-size:9px;color:#333;font-family:monospace;">webring: <a href="#">&lt;&lt; prev</a> | <a href="#">random</a> | <a href="#">next &gt;&gt;</a> - member of the MIT HAMMER WEBRING</span>
-</p>
-
-<div style="font-size:10px;color:black;font-family:monospace;opacity:0.7;">
-  last updated: 06/30/2024 3:47 AM by jose - fixed brian + airhorn - now with 100% less pixabay
-</div>
-
-<script>
-function airhorn(){
-  try {
-    const AC = window.AudioContext || window.webkitAudioContext;
-    const ctx = new AC();
-    if(ctx.state === 'suspended') ctx.resume();
-    const now = ctx.currentTime;
-    [440, 550, 660].forEach((freq,i)=>{
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.type = 'square';
-      o.frequency.value = freq;
-      o.connect(g); g.connect(ctx.destination);
-      g.gain.setValueAtTime(0.35, now);
-      g.gain.exponentialRampToValueAtTime(0.01, now+0.7);
-      o.start(now + i*0.015);
-      o.stop(now+0.75);
-    });
-    const o2 = ctx.createOscillator();
-    const g2 = ctx.createGain();
-    o2.frequency.value = 220;
-    o2.type = 'sawtooth';
-    o2.connect(g2); g2.connect(ctx.destination);
-    g2.gain.setValueAtTime(0.2, now);
-    g2.gain.exponentialRampToValueAtTime(0.01, now+0.5);
-    o2.start(now); o2.stop(now+0.5);
-  } catch(e){ console.log('airhorn fail',e); }
-  document.body.style.filter='contrast(1.15) saturate(1.2)';
-  setTimeout(()=>document.body.style.filter='',120);
-}
-let keys=[];
-document.addEventListener('keydown', e=>{
-  keys.push(e.key.toLowerCase());
-  if(keys.join('').includes('hammer')){
-    document.body.style.animation='rainbow 0.4s linear infinite';
-    setTimeout(()=>document.body.style.animation='',2000);
-    airhorn();
-    keys=[];
-  }
-});
-console.log('%c 🔨 HAMMER IN A BOX - MLG EDITION 🔨 ', 'background: yellow; color: red; font-size: 20px; font-family: Comic Sans MS;');
-console.log('%c get noscoped nerd ', 'color: lime; background: black; font-size: 12px;');
-</script>
-
+  <main>
+    <img src="sad-face.png" alt="A blue sad face" width="554" height="554">
+  </main>
+  <footer>Credits: Jose Carvajal-Beltran</footer>
 </body>
 </html>
