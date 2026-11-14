@@ -1,0 +1,15 @@
+# A circuit is a set of connections
+
+A circuit model describes components and the connections between them. Begin by labeling the nodes, then identify which components connect each pair.
+
+## A simple example
+
+Draw one source and one resistor in a closed loop. Label the source voltage and choose a current direction before you calculate.
+
+**Useful relationship:** V = I R
+
+## Pause and try
+
+Draw a simple loop. Label each component and the current direction you choose.
+
+[Try the practice](COURSE/unit-1/practice) · [Back to the learning path](COURSE)

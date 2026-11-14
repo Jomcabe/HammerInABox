@@ -1,0 +1,36 @@
+# Practice 02: measure what matters
+
+Sample practice. No deadline. Each question is worth one sample point.
+
+<question multiplechoice>
+csq_name = 'concept'
+csq_prompt = 'What belongs beside every measured value?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = 'A unit tells the reader what scale and quantity the number represents.'
+csq_renderer = "radio"
+csq_options = ['A guess', 'A unit', 'A course number']
+csq_soln_mode = "index"
+csq_soln = 1
+</question>
+
+<question smallbox>
+csq_name = 'calculation'
+csq_prompt = 'Three measurements are 2, 4, and 6 mm. What is their mean?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = 'Add the three values and divide by three: (2 + 4 + 6) ÷ 3 = 4 mm.'
+csq_soln = '4'
+csq_size = 16
+csq_prompt += ' Enter the number in mm.'
+def csq_check_function(sub, sol):
+    import math
+    try:
+        value = float(sub.strip())
+        correct = math.isfinite(value) and abs(value - float(sol)) <= 0.001
+    except (ValueError, TypeError, OverflowError):
+        return 0, "Enter a number without units."
+    return (1, 'Add the three values and divide by three: (2 + 4 + 6) ÷ 3 = 4 mm.') if correct else (0, "Not quite yet. Check your relationship and units, then try again.")
+</question>
+
+[Review the lesson](COURSE/unit-2)

@@ -1,0 +1,36 @@
+# Practice 02: keep a useful notebook
+
+Sample practice. No deadline. Each question is worth one sample point.
+
+<question multiplechoice>
+csq_name = 'concept'
+csq_prompt = 'Which is an observation?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = 'A measured displacement records what happened without assuming a cause.'
+csq_renderer = "radio"
+csq_options = ['The design is the best', 'The idea is elegant', 'The sample moved 4 mm']
+csq_soln_mode = "index"
+csq_soln = 2
+</question>
+
+<question smallbox>
+csq_name = 'calculation'
+csq_prompt = 'Five trials take 2 minutes each. How long do they take in total?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = '5 × 2 = 10 minutes.'
+csq_soln = '10'
+csq_size = 16
+csq_prompt += ' Enter the number in min.'
+def csq_check_function(sub, sol):
+    import math
+    try:
+        value = float(sub.strip())
+        correct = math.isfinite(value) and abs(value - float(sol)) <= 0.001
+    except (ValueError, TypeError, OverflowError):
+        return 0, "Enter a number without units."
+    return (1, '5 × 2 = 10 minutes.') if correct else (0, "Not quite yet. Check your relationship and units, then try again.")
+</question>
+
+[Review the lesson](COURSE/unit-2)

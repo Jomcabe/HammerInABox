@@ -1,0 +1,15 @@
+# Test before you build
+
+Start a circuit project by writing its intended behavior. Draw a block diagram, test each part, and keep notes about the results.
+
+## A simple example
+
+A simple indicator can be described as an input, a decision, and an output. Test each block before combining them.
+
+**Useful relationship:** E = P t
+
+## Pause and try
+
+Write a short plan for a simulated indicator circuit. Describe its input and output.
+
+[Try the practice](COURSE/unit-4/practice) · [Back to the learning path](COURSE)

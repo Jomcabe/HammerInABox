@@ -1,0 +1,36 @@
+# Practice 04: build something of your own
+
+Sample practice. No deadline. Each question is worth one sample point.
+
+<question multiplechoice>
+csq_name = 'concept'
+csq_prompt = 'What makes a project goal useful?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = 'A goal that can be checked gives you a way to judge your next step.'
+csq_renderer = "radio"
+csq_options = ['It can be checked', 'It promises perfection', 'It avoids testing']
+csq_soln_mode = "index"
+csq_soln = 0
+</question>
+
+<question smallbox>
+csq_name = 'calculation'
+csq_prompt = 'You finish 3 of 4 project tasks. What percentage is complete?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = '3 ÷ 4 × 100 = 75%.'
+csq_soln = '75'
+csq_size = 16
+csq_prompt += ' Enter the number in %.'
+def csq_check_function(sub, sol):
+    import math
+    try:
+        value = float(sub.strip())
+        correct = math.isfinite(value) and abs(value - float(sol)) <= 0.001
+    except (ValueError, TypeError, OverflowError):
+        return 0, "Enter a number without units."
+    return (1, '3 ÷ 4 × 100 = 75%.') if correct else (0, "Not quite yet. Check your relationship and units, then try again.")
+</question>
+
+[Review the lesson](COURSE/unit-4)

@@ -1,0 +1,36 @@
+# Practice 02: work with resistance
+
+Sample practice. No deadline. Each question is worth one sample point.
+
+<question multiplechoice>
+csq_name = 'concept'
+csq_prompt = 'Which quantity is equal through series components?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = 'Components in a single series path carry the same current.'
+csq_renderer = "radio"
+csq_options = ['Voltage', 'Current', 'Resistance']
+csq_soln_mode = "index"
+csq_soln = 1
+</question>
+
+<question smallbox>
+csq_name = 'calculation'
+csq_prompt = 'What is the total resistance of 3 Ω and 7 Ω resistors in series?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = 'Series resistances add: 3 + 7 = 10 Ω.'
+csq_soln = '10'
+csq_size = 16
+csq_prompt += ' Enter the number in Ω.'
+def csq_check_function(sub, sol):
+    import math
+    try:
+        value = float(sub.strip())
+        correct = math.isfinite(value) and abs(value - float(sol)) <= 0.001
+    except (ValueError, TypeError, OverflowError):
+        return 0, "Enter a number without units."
+    return (1, 'Series resistances add: 3 + 7 = 10 Ω.') if correct else (0, "Not quite yet. Check your relationship and units, then try again.")
+</question>
+
+[Review the lesson](COURSE/unit-2)

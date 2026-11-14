@@ -1,0 +1,36 @@
+# Practice 04: share what you learned
+
+Sample practice. No deadline. Each question is worth one sample point.
+
+<question multiplechoice>
+csq_name = 'concept'
+csq_prompt = 'What belongs in a project reflection?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = 'A limitation helps others understand what the evidence supports.'
+csq_renderer = "radio"
+csq_options = ['Only successful results', 'An honest limitation', 'A promise of certainty']
+csq_soln_mode = "index"
+csq_soln = 1
+</question>
+
+<question smallbox>
+csq_name = 'calculation'
+csq_prompt = 'You have 8 observations and use 6 in a comparison. How many remain?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = '8 − 6 = 2 observations.'
+csq_soln = '2'
+csq_size = 16
+csq_prompt += ' Enter the number in observations.'
+def csq_check_function(sub, sol):
+    import math
+    try:
+        value = float(sub.strip())
+        correct = math.isfinite(value) and abs(value - float(sol)) <= 0.001
+    except (ValueError, TypeError, OverflowError):
+        return 0, "Enter a number without units."
+    return (1, '8 − 6 = 2 observations.') if correct else (0, "Not quite yet. Check your relationship and units, then try again.")
+</question>
+
+[Review the lesson](COURSE/unit-4)

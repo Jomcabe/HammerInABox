@@ -1,0 +1,15 @@
+# Write down the relationship
+
+A resistor model relates the voltage across the component to the current through it. Use consistent reference directions when writing the relationship.
+
+## A simple example
+
+Two equal resistors in series carry the same current. Their voltage drops add to the total applied voltage.
+
+**Useful relationship:** R total = R₁ + R₂
+
+## Pause and try
+
+Sketch two resistors in series. Mark a current direction and each voltage drop.
+
+[Try the practice](COURSE/unit-2/practice) · [Back to the learning path](COURSE)

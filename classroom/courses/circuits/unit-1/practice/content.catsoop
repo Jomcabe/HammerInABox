@@ -1,0 +1,36 @@
+# Practice 01: meet the circuit
+
+Sample practice. No deadline. Each question is worth one sample point.
+
+<question multiplechoice>
+csq_name = 'concept'
+csq_prompt = 'What does a node represent?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = 'A node represents points joined by ideal wire in a circuit model.'
+csq_renderer = "radio"
+csq_options = ['A shared electrical connection', 'A type of battery', 'A unit of power']
+csq_soln_mode = "index"
+csq_soln = 0
+</question>
+
+<question smallbox>
+csq_name = 'calculation'
+csq_prompt = 'A 10 V source is connected across a 5 Ω resistor. What is the current?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = 'Ohm’s law gives I = V/R = 10/5 = 2 A.'
+csq_soln = '2'
+csq_size = 16
+csq_prompt += ' Enter the number in A.'
+def csq_check_function(sub, sol):
+    import math
+    try:
+        value = float(sub.strip())
+        correct = math.isfinite(value) and abs(value - float(sol)) <= 0.001
+    except (ValueError, TypeError, OverflowError):
+        return 0, "Enter a number without units."
+    return (1, 'Ohm’s law gives I = V/R = 10/5 = 2 A.') if correct else (0, "Not quite yet. Check your relationship and units, then try again.")
+</question>
+
+[Review the lesson](COURSE/unit-1)

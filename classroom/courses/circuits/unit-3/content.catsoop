@@ -1,0 +1,15 @@
+# Read the time axis
+
+A periodic signal repeats after one period. Frequency counts how many cycles occur per second. Keep the units visible when you convert between them.
+
+## A simple example
+
+Sketch a repeating wave and mark two neighboring peaks. The time between equivalent points is one period.
+
+**Useful relationship:** f = 1 / T
+
+## Pause and try
+
+Sketch a periodic signal. Label one complete cycle and its period.
+
+[Try the practice](COURSE/unit-3/practice) · [Back to the learning path](COURSE)

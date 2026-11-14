@@ -1,0 +1,36 @@
+# Practice 04: make a small device
+
+Sample practice. No deadline. Each question is worth one sample point.
+
+<question multiplechoice>
+csq_name = 'concept'
+csq_prompt = 'What helps locate a problem in a prototype?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = 'Testing parts separately helps locate where the behavior differs from the plan.'
+csq_renderer = "radio"
+csq_options = ['Skipping measurements', 'Testing each part', 'Changing all parts at once']
+csq_soln_mode = "index"
+csq_soln = 1
+</question>
+
+<question smallbox>
+csq_name = 'calculation'
+csq_prompt = 'A device uses 2 W for 3 hours. How much energy does it use?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = 'Energy = power × time = 2 W × 3 h = 6 Wh.'
+csq_soln = '6'
+csq_size = 16
+csq_prompt += ' Enter the number in Wh.'
+def csq_check_function(sub, sol):
+    import math
+    try:
+        value = float(sub.strip())
+        correct = math.isfinite(value) and abs(value - float(sol)) <= 0.001
+    except (ValueError, TypeError, OverflowError):
+        return 0, "Enter a number without units."
+    return (1, 'Energy = power × time = 2 W × 3 h = 6 Wh.') if correct else (0, "Not quite yet. Check your relationship and units, then try again.")
+</question>
+
+[Review the lesson](COURSE/unit-4)

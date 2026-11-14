@@ -1,0 +1,12 @@
+services:
+  classroom:
+    build: .
+    ports:
+      - "127.0.0.1:7667:7667"
+    environment:
+      GUBBER_ORIGIN: "${GUBBER_ORIGIN:-http://localhost:7667}"
+    volumes:
+      - classroom-data:/data
+    restart: unless-stopped
+volumes:
+  classroom-data:

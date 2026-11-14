@@ -1,0 +1,7 @@
+{
+  "name": "gubber-classroom",
+  "private": true,
+  "scripts": {
+    "build": "python3 scripts/build.py"
+  }
+}

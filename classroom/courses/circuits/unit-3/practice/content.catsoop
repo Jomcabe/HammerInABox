@@ -1,0 +1,36 @@
+# Practice 03: look at a changing signal
+
+Sample practice. No deadline. Each question is worth one sample point.
+
+<question multiplechoice>
+csq_name = 'concept'
+csq_prompt = 'What does frequency count?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = 'Frequency counts cycles per second, measured in hertz.'
+csq_renderer = "radio"
+csq_options = ['Volts per meter', 'Cycles per second', 'Seconds per volt']
+csq_soln_mode = "index"
+csq_soln = 1
+</question>
+
+<question smallbox>
+csq_name = 'calculation'
+csq_prompt = 'A signal repeats every 0.25 seconds. What is its frequency?'
+csq_npoints = 1
+csq_grading_mode = "legacy"
+csq_explanation = 'f = 1/T = 1/0.25 = 4 Hz.'
+csq_soln = '4'
+csq_size = 16
+csq_prompt += ' Enter the number in Hz.'
+def csq_check_function(sub, sol):
+    import math
+    try:
+        value = float(sub.strip())
+        correct = math.isfinite(value) and abs(value - float(sol)) <= 0.001
+    except (ValueError, TypeError, OverflowError):
+        return 0, "Enter a number without units."
+    return (1, 'f = 1/T = 1/0.25 = 4 Hz.') if correct else (0, "Not quite yet. Check your relationship and units, then try again.")
+</question>
+
+[Review the lesson](COURSE/unit-3)

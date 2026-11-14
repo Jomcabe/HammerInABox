@@ -1,78 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HammerInABox</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      min-height: 100svh;
-      display: grid;
-      grid-template-rows: 1fr auto;
-      background: #fff;
-      color: #666;
-      font-family: Arial, sans-serif;
-    }
-
-    main {
-      display: grid;
-      place-items: center;
-      padding: 24px;
-    }
-
-    img {
-      display: block;
-      width: 100%;
-      max-width: 554px;
-      max-width: min(554px, calc(100svh - 108px));
-      height: auto;
-    }
-
-    footer {
-      padding: 16px 24px 24px;
-      text-align: center;
-      font-size: 12px;
-      line-height: 20px;
-    }
-
-    .elsewhere {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      display: grid;
-      place-items: center;
-      width: 36px;
-      height: 36px;
-      border: 1px solid #ddd;
-      border-radius: 50%;
-      background: #fff;
-      color: #777;
-      font-size: 15px;
-      text-decoration: none;
-    }
-
-    .elsewhere:hover {
-      border-color: #777;
-      color: #222;
-    }
-
-    .elsewhere:focus-visible {
-      outline: 2px solid #222;
-      outline-offset: 4px;
-    }
-  </style>
-</head>
-<body>
-  <a class="elsewhere" href="elsewhere.html" aria-label="Go somewhere else">?</a>
-  <main>
-    <img src="sad-face.png" alt="A blue sad face" width="554" height="554">
-  </main>
-  <footer>Credits: Jose Carvajal-Beltran</footer>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Gubber Classroom. A place to learn, work things out, and build something new. Explore sample lessons, practice problems, and projects."
+    />
+    <meta name="theme-color" content="#173e33" />
+    <title>Gubber Classroom</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/classroom.css" />
+    <script src="assets/classroom.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="mobile-bar">
+      <a class="brand" href="#/materials/overview"
+        ><span class="brand-mark">g</span>gubber</a
+      ><button
+        id="menu-toggle"
+        class="icon-button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
+    </div>
+    <div id="backdrop" hidden></div>
+    <aside class="sidebar" id="sidebar" aria-label="Classroom navigation">
+      <a class="brand" href="#/materials/overview"
+        ><span class="brand-mark">g</span>gubber</a
+      >
+      <div class="side-label">YOUR CLASSROOM</div>
+      <label class="sr-only" for="course-select">Choose a course</label>
+      <div class="course-switch">
+        <span class="course-mini" aria-hidden="true">✳</span
+        ><select id="course-select"></select
+        ><span class="select-arrow" aria-hidden="true">⌄</span>
+      </div>
+      <nav id="navigation" class="navigation"></nav>
+      <div class="side-note">
+        <span class="note-star">✳</span>
+        <p>A little curiosity.<br />A lot of possibilities.</p>
+        <span class="mono">LEARN · TRY · REPEAT</span>
+      </div>
+      <div class="sidebar-bottom">
+        <button class="help-button" data-action="help">
+          <span>ⓘ</span> About this classroom <span>↗</span>
+        </button>
+        <div class="person">
+          <span class="avatar">JC</span>
+          <div>Jose Carvajal-Beltran<small>Classroom creator</small></div>
+        </div>
+      </div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar">
+        <div class="breadcrumb">
+          <span>Classroom</span><span class="crumb-divider">›</span
+          ><strong id="breadcrumb">Overview</strong>
+        </div>
+        <div class="top-actions">
+          <button
+            class="search-button"
+            data-action="search"
+            aria-label="Search classroom"
+          >
+            <span aria-hidden="true">⌕</span><span>Search classroom</span
+            ><kbd>/</kbd></button
+          ><span class="template-badge"><i></i> Template</span
+          ><span class="top-avatar" aria-label="Guest preview">G</span>
+        </div>
+      </header>
+      <main id="main" tabindex="-1">
+        <div class="loading">Opening the classroom…</div>
+      </main>
+      <footer class="page-footer">
+        <span
+          >Gubber Classroom <span class="footer-dot">·</span> Made for what
+          comes next.</span
+        ><button data-action="help">
+          Independent learning space <span>↗</span>
+        </button>
+      </footer>
+    </div>
+    <dialog id="modal" aria-labelledby="modal-title">
+      <div class="dialog-top">
+        <h2 id="modal-title"></h2>
+        <button class="icon-button close-dialog" aria-label="Close dialog">
+          ✕
+        </button>
+      </div>
+      <div id="modal-body"></div>
+    </dialog>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </body>
 </html>
